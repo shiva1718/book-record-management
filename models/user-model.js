@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema({
         trim: true,
     },
     issuedBook: {
-        // type: mongoose.Schema.Types.ObjectId,
-        // ref: 'Book',
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+        // type: String,
         required: false,
-        trim: true,
+        // trim: true,
     },
     issuedDate: {
         type: String,

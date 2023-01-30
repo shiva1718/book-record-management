@@ -31,13 +31,13 @@ exports.getBookById = async (req, res) => {
 };
 
 exports.getAllIssuedBooks = async (req, res) => {
-    const users = await bookModels.find({
+    const users = await userModels.find({
         issuedBook: {$exists: true}
     }).populate('issuedBook');
     const issuedBooks = users.map((user) => new IssuedBook(user));
-    if (issuedBooks) {
+    if (issuedBooks.length !== 0) {
         return res.status(200).json({
-            message: 'Book issued successfully',
+            message: 'Fetched issued Books successfully',
             success: true,
             data: issuedBooks
         });
