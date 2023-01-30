@@ -1,5 +1,5 @@
 const express = require('express');
-const {users} = require('../data/users.json');
+// const {users} = require('../data/users.json');
 
 // import models
 const {userModels, bookModels} = require('../models');
