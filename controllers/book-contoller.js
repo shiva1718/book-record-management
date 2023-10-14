@@ -2,6 +2,11 @@
 const {userModels, bookModels} = require('../models');
 const IssuedBook = require('../dtos/book-dto');
 
+/**
+ * Retrieves all books from the database
+ *
+ * @returns {Array} An array containing all books in the database
+ */
 exports.getAllBooks = async (req, res) => {
     const books = await bookModels.find();
     if (books) return res.status(200).json({
@@ -15,6 +20,14 @@ exports.getAllBooks = async (req, res) => {
     });
 };
 
+
+/**
+ * Retrieves a book by its ID from the database.
+ *
+ * @param {number} id - The ID of the book to retrieve.
+ * @returns {Promise<Book>} A Promise that resolves to the book object.
+ * @throws {Error} If the book with the specified ID is not found.
+ */
 exports.getBookById = async (req, res) => {
     const book = await bookModels.findById(req.params.id);
     if (book) {
@@ -30,6 +43,11 @@ exports.getBookById = async (req, res) => {
     });
 };
 
+/**
+ * Retrieves a list of all issued books from the database.
+ *
+ * @returns {Array} An array of all issued books.
+ */
 exports.getAllIssuedBooks = async (req, res) => {
     const users = await userModels.find({
         issuedBook: {$exists: true}
@@ -48,6 +66,15 @@ exports.getAllIssuedBooks = async (req, res) => {
     });
 };
 
+/**
+ * Adds a book to the library.
+ *
+ * @param {string} title - The title of the book.
+ * @param {string} author - The author of the book.
+ * @param {string} genre - The genre of the book.
+ * @param {number} year - The year the book was published.
+ * @returns {boolean} - true if the book was added successfully, false otherwise.
+ */
 exports.addBook = async (req, res) => {
 
     if (!req.body) {
@@ -58,13 +85,6 @@ exports.addBook = async (req, res) => {
     }
     await bookModels.create(req.body);
     const allBooks = await bookModels.find();
-    // if (book) {
-    //     return res.status(200).send({
-    //         message: 'Book already exist',
-    //         success: true,
-    //         data: book
-    //     });
-    // }
     res.status(200).json({
         message: 'Book Successfully added',
         success: true,
@@ -72,6 +92,12 @@ exports.addBook = async (req, res) => {
     });
 };
 
+/**
+ * Deletes a book from the system.
+ *
+ * @param {number} bookId - The ID of the book to be deleted.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the book was successfully deleted, or false otherwise.
+ */
 exports.deleteBook = async (req, res) => {
     const {id} = req.params;
     const deletedBook = await bookModels.findByIdAndDelete(id);
@@ -88,6 +114,14 @@ exports.deleteBook = async (req, res) => {
     });
 };
 
+/**
+ * Updates a book in the database with new information.
+ *
+ * @param {string} bookId - The unique identifier of the book to be updated.
+ * @param {object} updatedBook - The updated book object containing the new information.
+ * @returns {Promise} - A promise that resolves when the book is successfully updated.
+ * @throws {Error} - If the bookId is not a valid string or the updatedBook is not a valid object.
+ */
 exports.updateBook = async (req, res) => {
     const {id} = req.params;
     const {name, author, genre, price, publisher} = req.body;
@@ -109,15 +143,15 @@ exports.updateBook = async (req, res) => {
         message: 'Book not found',
         success: false
     });
-    // await bookModels.findByIdAndUpdate(id, {
-    //     name,
-    //     author,
-    //     genre,
-    //     price,
-    //     publisher
-    // });
 };
 
+/**
+ * Issues a book to a user.
+ *
+ * @param {string} bookId - The ID of the book to be issued.
+ * @param {string} userId - The ID of the user to whom the book is being issued.
+ * @returns {boolean} - Returns true if the book is successfully issued, false otherwise.
+ */
 exports.issueBook = async (req, res) => {
     const {id} = req.params;
     const {userId, issuedDate, returnDate} = req.body;
